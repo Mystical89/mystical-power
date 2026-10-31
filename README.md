@@ -62,6 +62,27 @@ lets Omarchy re-enable its stock widget. The bar entry stays in `shell.json`.
 | `Panel.qml` | `moduleName` / `ipcTarget` are `mystical.power` instead of `omarchy.power`: right-click writes `showPercentage` into this plugin's own bar entry, and the IPC handler no longer collides with the stock widget's. |
 | `Model.js` | `batteryIcon()` returns the plain ten-level set only — the charging variants moved out to a separate bolt — and the mode labels are Russian. |
 
+## Keeping up with upstream
+
+`omarchy.power` ships inside the Omarchy package, so there is no repository to
+`git pull` from. `tools/merge-upstream.sh` does a three-way merge instead: it
+fetches upstream as it was when this fork was made (recorded in
+`.upstream-base`), fetches current upstream from `omacom/omarchy`, and merges
+both into the working tree while keeping the fork's own edits.
+
+```bash
+tools/merge-upstream.sh            # has upstream moved? no writes
+tools/merge-upstream.sh --apply    # merge, write files, bump .upstream-base
+tools/merge-upstream.sh --keep     # leave merged files in a temp dir for review
+tools/merge-upstream.sh --ref SHA  # merge up to a specific upstream commit
+```
+
+Conflicts are printed and nothing is written: keep this fork's structure and
+take upstream's values (`target: heroStatus` stays, durations come from
+upstream). After `--apply`, run `omarchy restart shell` — QML does not
+hot-reload for panels, so an un-restarted shell keeps showing the old code.
+`manifest.json` is never merged; the fork owns it.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). The original widget is Omarchy's, copyright
@@ -133,6 +154,25 @@ omarchy plugin remove mystical.power
 | `Panel.qml` | Глиф получает `rotation: 90` в канве `Style.bar.iconCanvas` размером `Style.bar.iconFont`; заряд рисуется кеглем `Style.font.body`; отступы — из `Style.space()`. |
 | `Panel.qml` | `moduleName` / `ipcTarget` — `mystical.power`, а не `omarchy.power`: правый клик пишет `showPercentage` в запись именно этого плагина, а IPC-обработчик больше не конфликтует со штатным виджетом. |
 | `Model.js` | `batteryIcon()` возвращает только обычный набор из десяти уровней — зарядные варианты вынесены в отдельную молнию, — а подписи режима по-русски. |
+
+### Обновление из апстрима
+
+`omarchy.power` лежит внутри пакета Omarchy, отдельного репозитория у него нет,
+поэтому `git pull` здесь не работает. `tools/merge-upstream.sh` делает
+трёхсторонний мерж: берёт апстрим на момент создания форка (записан в
+`.upstream-base`), берёт текущий апстрим из `omacom/omarchy` и сливает оба с
+локальными правками.
+
+```bash
+tools/merge-upstream.sh            # изменился ли апстрим? ничего не пишет
+tools/merge-upstream.sh --apply    # слить, записать файлы, обновить .upstream-base
+tools/merge-upstream.sh --keep     # оставить результат мержа во временном каталоге
+```
+
+Конфликты печатаются, файлы не перезаписываются: держи структуру форка, бери
+значения апстрима. После `--apply` — `omarchy restart shell`: QML панелей не
+перезагружается на лету, и без рестарта видно старый код. `manifest.json` не
+мержится, им владеет форк.
 
 ### Лицензия
 
