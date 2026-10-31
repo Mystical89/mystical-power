@@ -3,7 +3,11 @@
   "id": "mystical.power",
   "name": "Power (horizontal battery)",
   "version": "1.0.0",
-  "author": "Mystical89 (based on Omarchy's omarchy.power)",
+  "author": "Mystical89",
+  "basedOn": {
+    "author": "Omarchy",
+    "url": "https://github.com/omacom/omarchy"
+  },
   "license": "MIT",
   "description": "Battery in the bar: horizontal icon with the remaining charge to its right",
   "kinds": [
